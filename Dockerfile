@@ -2,4 +2,8 @@ FROM python:3.12-alpine
 
 WORKDIR /app
 
-RUN 
+COPY . /app
+
+RUN pip install -r ./requirements.txt
+
+CMD ["python3", "main.py"]
