@@ -9,7 +9,8 @@ class TgBotConfig:
 
 @dataclass
 class DataBaseConfig:
-    Uri: str
+    Database: str
+    Host: str
     Login: str
     Password: str
     Port: str
@@ -43,7 +44,8 @@ def load_env(path: str = ".env") -> Config:
             Format=env("LOG_FORMAT")
         ),
         db_config=DataBaseConfig(
-            Uri=env("DB_URI"),
+            Database=env("DB"),
+            Host=env("DB_HOST"),
             Login=env("DB_LOGIN"),
             Password=env("DB_PASSWORD"),
             Port=env("DB_PORT")
