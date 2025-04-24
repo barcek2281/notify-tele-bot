@@ -8,3 +8,6 @@ venv/
 # bin files
 bin/
 *.pyc
+.mypy_cache/
+venv/
+__pycache__/

@@ -3,8 +3,15 @@ from dataclasses import dataclass
 from environs import Env
 
 @dataclass
-class Config:
+class TgBot:
     BotToken: str
+
+
+@dataclass
+class Config:
+    tg_bot: TgBot
+
+
 
 def load_env(path: str = ".env") -> Config:
 
@@ -12,5 +19,7 @@ def load_env(path: str = ".env") -> Config:
     env.read_env(path=path)
 
     return Config(
-        BotToken=env("BOT_TOKEN")
+        tg_bot=TgBot(
+            BotToken=env("BOT_TOKEN")
+            )
     )
