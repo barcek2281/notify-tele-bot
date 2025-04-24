@@ -1,0 +1,10 @@
+# virtual i
+venv/
+.venv/
+
+# env files
+.env
+
+# bin files
+bin/
+*.pyc
