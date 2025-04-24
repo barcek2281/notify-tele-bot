@@ -11,23 +11,25 @@ from handlers import user_handler
 logger = logging.getLogger(__name__)
 
 async def main():
-    logging.basicConfig(
-        level=logging.INFO,
-        format='%(filename)s:%(lineno)d #%(levelname)-8s '
-               '[%(asctime)s] - %(name)s - %(message)s')
+    config: Config = load_env()
 
-    # Выводим в консоль информацию о начале запуска бота
+
+    logging.basicConfig(
+        level=config.log_config.Level,
+        format=config.log_config.Format)
+
     logger.info('Starting bot')
 
-    config: Config = load_env()
 
     bot = Bot(
         token=config.tg_bot.BotToken,
         default=DefaultBotProperties(parse_mode=ParseMode.HTML)
     )
 
+    userRouter = user_handler.userRouter()
+
     dp = Dispatcher()
-    dp.include_router(user_handler.router)
+    dp.include_router(userRouter.router)
 
     await bot.delete_webhook(drop_pending_updates=True)
     await dp.start_polling(bot)
