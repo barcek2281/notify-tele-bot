@@ -11,3 +11,5 @@ bin/
 .mypy_cache/
 venv/
 __pycache__/
+
+postgres-data

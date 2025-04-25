@@ -9,9 +9,8 @@ class TgBotConfig:
 
 @dataclass
 class DataBaseConfig:
-    Database: str
-    Host: str
-    Login: str
+    DB: str
+    User: str
     Password: str
     Port: str
 
@@ -44,10 +43,9 @@ def load_env(path: str = ".env") -> Config:
             Format=env("LOG_FORMAT")
         ),
         db_config=DataBaseConfig(
-            Database=env("DB"),
-            Host=env("DB_HOST"),
-            Login=env("DB_LOGIN"),
-            Password=env("DB_PASSWORD"),
-            Port=env("DB_PORT")
+            DB=env("POSTGRES_DB"),
+            User=env("POSTGRES_PORT"),
+            Password=env("POSTGRES_USER"),
+            Port=env("POSTGRES_PASSWORD")
         )
     )

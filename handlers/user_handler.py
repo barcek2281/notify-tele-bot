@@ -8,7 +8,7 @@ from aiogram.types import Message
 from config_data.config import DataBaseConfig
 from db.postgres.postgre import Database
 
-class userRouter:
+class UserRouter:
     def __init__(self, db_config: DataBaseConfig):
         self.router = Router()
         self.db = Database(db_config=db_config)

@@ -26,7 +26,7 @@ async def main():
         default=DefaultBotProperties(parse_mode=ParseMode.HTML)
     )
 
-    userRouter = user_handler.userRouter(db_config=config.db_config)
+    userRouter = user_handler.UserRouter(db_config=config.db_config)
 
     dp = Dispatcher()
     dp.include_router(userRouter.router)

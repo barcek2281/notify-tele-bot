@@ -1,51 +1,61 @@
-version: '3.8'
-
 services:
-  # Telegram Bot
-  bot:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    environment:
-      - BOT_TOKEN=${BOT_TOKEN}
-      - LOG_LEVEL=${LOG_LEVEL}
-      - LOG_FORMAT=${LOG_FORMAT}
-      - DB=${DB}
-      - DB_HOST=postgres
-      - DB_LOGIN=${DB_LOGIN}
-      - DB_PASSWORD=${DB_PASSWORD}
-      - DB_PORT=${DB_PORT}
-    depends_on:
-      - postgres
-    networks:
-      - bot-network
-
-  # PostgreSQL Database
   postgres:
-    image: postgres:13-alpine
+    image: postgres:17-alpine
+    container_name: postgres
+    env_file:
+      - .env
     environment:
-      POSTGRES_USER: ${DB_LOGIN}
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
-      POSTGRES_DB: ${DB}
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     volumes:
-      - postgres-data:/var/lib/postgresql/data
+      - ./postgres-data:/var/lib/postgresql/data
+    ports:
+      - "${POSTGRES_PORT}:5432"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "5"
+        compress: "true"
     networks:
-      - bot-network
+      - app_network
 
-  # pgAdmin for database management
   pgadmin:
     image: dpage/pgadmin4
+    container_name: pgadmin
+    env_file:
+      - .env
     environment:
-      PGADMIN_DEFAULT_EMAIL: admin@admin.com
-      PGADMIN_DEFAULT_PASSWORD: admin
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
+    # volumes:
+    #   - ./pgadmin-data:/var/lib/pgadmin
     ports:
-      - "5050:80"
+      - "${PGADMIN_PORT}:80"
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "5"
+        compress: "true"
     networks:
-      - bot-network
+      - app_network
 
 networks:
-  bot-network:
-    driver: bridge
+  app_network:
+    name: app_network
 
-volumes:
-  postgres-data:
+
+# volumes:
+#   postgres-data:
